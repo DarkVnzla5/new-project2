@@ -2,14 +2,14 @@ import { Link } from "@tanstack/react-router"
 
 export function Footer() {
   return (
-    <footer>
+    <footer className="footer footer-horizontal mt-4 p-2 bg-base-200 text-secondary">
       <section className="footer footer-horizontal p-2 ">
         <div>
           <span className="footer-title">Compañía</span>
-          <Link className="link link-hover" to="/About">
+          <Link to="/About" className="link link-hover">
             Acerca de
           </Link>
-          <Link className="link link-hover" to="/Contact">
+          <Link to="/Contact" className="link link-hover">
             Contacto
           </Link>
         </div>
