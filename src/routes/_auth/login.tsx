@@ -11,7 +11,5 @@ function RouteComponent() {
       Hello "/_auth/login"!
       <Link to="/register">
         <Button>To register</Button>
-      </Link>
-    </section>
   )
 }
