@@ -12,6 +12,7 @@ function RouteComponent() {
       <Link to="/login">
         <Button>To login</Button>
       </Link>
+      HOLA
     </div>
   )
 }
