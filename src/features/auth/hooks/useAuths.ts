@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
-import { useAuthStore } from "@/features/auth/store/AuthState"
+import { useAuthStore } from "@/features/auth/AuthState"
 import api from "@/services/Api"
 
 export const useAuthMutations = () => {
