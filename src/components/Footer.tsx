@@ -6,10 +6,10 @@ export function Footer() {
       <section className="footer footer-horizontal p-2 ">
         <div>
           <span className="footer-title">Compañía</span>
-          <Link className="link link-hover" to="/About">
+          <Link to="/about" className="link link-hover">
             Acerca de
           </Link>
-          <Link className="link link-hover" to="/Contact">
+          <Link to="/contact" className="link link-hover">
             Contacto
           </Link>
         </div>
