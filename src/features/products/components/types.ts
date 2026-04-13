@@ -11,6 +11,7 @@ export interface Product {
   images?: ProductImage[]
   created_at?: string
   updated_at?: string
+  quantity?: number
 }
 
 export interface CreateProductPayload {
@@ -20,6 +21,7 @@ export interface CreateProductPayload {
   description?: string
   thumbnail?: string
   images?: string[]
+  quantity?: number
 }
 
 export interface UpdateProductPayload extends Partial<CreateProductPayload> {
