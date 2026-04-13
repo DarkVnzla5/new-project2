@@ -1,8 +1,15 @@
 import { useQuery } from "@tanstack/react-query"
 import api from "@/lib/client"
 import { useProductFilterStore } from "../store"
-import { applyFilters } from "./utils"
+import { applyFilters, getProductImage } from "./utils"
 import type { Product } from "./types"
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card"
 
 export default function ProductsList() {
   // 1. Get current filters from Zustand
@@ -13,6 +20,7 @@ export default function ProductsList() {
     queryKey: ["products"],
     queryFn: async () => {
       const { data } = await api.get("/products/")
+      console.log("data", data)
       return data
     },
   })
@@ -21,17 +29,24 @@ export default function ProductsList() {
   const filteredProducts = applyFilters(products, filters)
 
   if (isLoading) return <div>Cargando productos...</div>
+  if (products.length === 0) return <div>No se encontraron productos.</div>
+  if (products.length > 0) console.log("Se encontraron productos.", products)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
       {filteredProducts.map((product) => (
-        <div key={product.id} className="border p-4 rounded-lg shadow-sm">
-          <h3 className="font-bold">{product.name || product.title}</h3>
-          <p className="text-primary font-semibold">${product.price}</p>
-          <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
-            {product.category}
-          </span>
-        </div>
+        <Card key={product.id} className="border p-4 rounded-lg shadow-sm">
+          <img src={getProductImage(product)} alt={product.name} />
+          <CardHeader>
+            <CardTitle>{product.name || product.title}</CardTitle>
+            <CardDescription>${product.price}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+              {product.category}
+            </span>
+          </CardContent>
+        </Card>
       ))}
 
       {filteredProducts.length === 0 && (
