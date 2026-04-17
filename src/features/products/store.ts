@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { FilterValues } from "./components/utils"
+import type { FilterValues } from "./utils"
 
 interface ProductFilterStore {
   filters: FilterValues

@@ -14,11 +14,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useAuthMutations } from "../hooks/useRegister"
 
-export function RegisterForm({
+export function Registerform({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { register } = useAuthMutations()
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -47,7 +49,12 @@ export function RegisterForm({
                 <Input id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Crear Cuenta</Button>
+                <Button
+                  type="submit"
+                  onClick={() => register({ username: "", password: "" })}
+                >
+                  Crear Cuenta
+                </Button>
                 <FieldDescription className="text-center">
                   ¿Ya tienes una cuenta? <a href="/login">Inicia sesión</a>
                 </FieldDescription>

@@ -1,6 +1,10 @@
-import axios, { type AxiosInstance } from "axios"
+import axios, {
+  AxiosError,
+  type AxiosInstance,
+  type InternalAxiosRequestConfig,
+} from "axios"
 
-export const BASE_URL = "http://localhost:8000"
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
 export const API_BASE_URL = `${BASE_URL}/api/`
 
 const api: AxiosInstance = axios.create({
@@ -12,7 +16,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authtoken")
-    if (token) {
+    if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
@@ -23,8 +27,10 @@ api.interceptors.request.use(
 // --- Interceptor de Respuesta ---
 api.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
@@ -35,22 +41,31 @@ api.interceptors.response.use(
           const { data } = await axios.post(`${API_BASE_URL}token/refresh/`, {
             refresh: refreshToken,
           })
-
-          localStorage.setItem("authtoken", data.access)
-          originalRequest.headers.Authorization = `Bearer ${data.access}`
+          const newAccessToken = data.access
+          localStorage.setItem("authtoken", newAccessToken)
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+          }
           return api(originalRequest)
         } catch (refreshError) {
           console.error("Sesión expirada definitivamente")
-          localStorage.clear()
-          window.location.href = "/Auths"
+          handleLogout()
+          return Promise.reject(refreshError)
         }
       } else {
-        localStorage.clear()
-        window.location.href = "/Auths"
+        handleLogout()
       }
     }
     return Promise.reject(error)
   },
 )
+
+const handleLogout = () => {
+  localStorage.removeItem("authtoken")
+  localStorage.removeItem("refreshtoken")
+  if (typeof window !== "undefined") {
+    window.location.href = "/login"
+  }
+}
 
 export default api

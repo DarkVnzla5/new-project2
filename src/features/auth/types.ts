@@ -6,20 +6,16 @@ export interface User {
   last_name?: string
   role?: string
   avatar?: string
-  date_joined?: string
-  last_login?: string
-  is_active?: boolean
-  is_staff?: boolean
-  is_superuser?: boolean
+  created_at?: string
+  updated_at?: string
 }
 
 export interface Credentials {
-  email: string
+  username: string
   password: string
 }
 
 export interface RegisterData extends Credentials {
-  username?: string
   first_name?: string
   last_name?: string
   password_confirmation?: string

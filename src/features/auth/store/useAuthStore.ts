@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-interface User {
+export interface User {
   id: string
   email: string
   username: string
@@ -10,6 +10,9 @@ interface User {
   avatar?: string
   access?: string
   refresh?: string
+  created_at?: string
+  updated_at?: string
+  superUser?: boolean
 }
 
 interface AuthState {

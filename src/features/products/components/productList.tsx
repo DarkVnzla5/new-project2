@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import api from "@/lib/client"
+import api from "@/services/client"
 import { useProductFilterStore } from "../store"
-import { applyFilters, getProductImage } from "./utils"
-import type { Product } from "./types"
+import { applyFilters, getProductImage } from "../utils"
+import type { Product } from "../types"
 import { useDolar } from "@/lib/utils"
 import {
   Card,
@@ -34,7 +34,7 @@ export default function ProductsList() {
   if (products.length > 0) console.log("Se encontraron productos.", products)
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
       {filteredProducts.map((product) => (
         <Card key={product.id} className="border p-4 rounded-lg shadow-sm">
           <img

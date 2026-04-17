@@ -1,4 +1,4 @@
-import api from "@/lib/client"
+import api from "@/services/client"
 import { useQueryClient } from "@tanstack/react-query"
 import { useMutation } from "@tanstack/react-query"
 import type { Product } from "./types"
