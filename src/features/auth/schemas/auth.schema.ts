@@ -1,7 +1,7 @@
 import { z } from "zod/v4"
 
 export const loginSchema = z.object({
-  username: z.string().min(3, "El nombre de usuario es requerido"),
+  email: z.string().email("El correo electrónico es inválido"),
   password: z.string().min(4, "La contraseña es requerida"),
 })
 

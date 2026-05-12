@@ -12,12 +12,15 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (credentials: LoginSchema) => {
-      const { data } = await api.post("users/login/", credentials)
+      const { data } = await api.post("login/", credentials)
       return data
     },
     onSuccess: (data) => {
       setAuth(data)
       navigate({ to: "/" })
+      toast.success("Inicio de sesión exitoso", {
+        description: "Bienvenido a la plataforma",
+      })
     },
     onError: (error) => {
       let message = "Vuelva a intentar. Credenciales incorrectas."

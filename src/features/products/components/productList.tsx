@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import api from "@/services/client"
+import api from "@/services/Api"
 import { useProductFilterStore } from "../store"
 import { applyFilters, getProductImage } from "../utils"
 import type { Product } from "../types"

@@ -28,7 +28,7 @@ export function LoginForm({
 
   const form = useForm({
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
     onSubmit: async ({ value }) => {
@@ -56,10 +56,10 @@ export function LoginForm({
             <FieldGroup>
               {/* Usuario */}
               <form.Field
-                name="username"
+                name="email"
                 validators={{
                   onChange: ({ value }) => {
-                    const result = loginSchema.shape.username.safeParse(value)
+                    const result = loginSchema.shape.email.safeParse(value)
                     return result.success
                       ? undefined
                       : result.error.issues[0].message
@@ -71,13 +71,15 @@ export function LoginForm({
                       field.state.meta.errors.length > 0 ? true : undefined
                     }
                   >
-                    <FieldLabel htmlFor={field.name}>Usuario</FieldLabel>
+                    <FieldLabel htmlFor={field.name}>
+                      Correo electrónico
+                    </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
-                      type="text"
-                      placeholder="usuario"
-                      autoComplete="username"
+                      type="email"
+                      placeholder="[EMAIL_ADDRESS]"
+                      autoComplete="email"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
@@ -110,12 +112,12 @@ export function LoginForm({
                   >
                     <div className="flex items-center justify-between">
                       <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
-                      <Link
-                        to="/forgot-password"
+                      <a
+                        href="#"
                         className="text-sm underline-offset-4 hover:underline text-muted-foreground"
                       >
                         ¿Olvidaste tu contraseña?
-                      </Link>
+                      </a>
                     </div>
                     <Input
                       id={field.name}
