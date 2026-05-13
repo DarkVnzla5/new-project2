@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
-import api from "@/services/Api"
+import { ProductService } from "../services"
+import { productKeys } from "../mutations"
 import { useProductFilterStore } from "../store"
-import { applyFilters, getProductImage } from "../utils"
+import { applyFilters, getProductImage, formatPriceInBs } from "../utils"
 import type { Product } from "../types"
 import { useDolar } from "@/lib/utils"
 import {
@@ -15,15 +16,12 @@ import {
 export default function ProductsList() {
   // 1. Get current filters from Zustand
   const filters = useProductFilterStore((state) => state.filters)
-  const { data } = useDolar()
-  // 2. Fetch products (using TanStack Query)
+  const { data: dolarRate } = useDolar()
+
+  // 2. Fetch products through the service layer (not api.get directly)
   const { data: products = [], isLoading } = useQuery<Product[]>({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const { data } = await api.get("/products/")
-      console.log("data", data)
-      return data
-    },
+    queryKey: productKeys.all,
+    queryFn: ProductService.getAll,
   })
 
   // 3. Apply the filters from utils.ts
@@ -31,7 +29,6 @@ export default function ProductsList() {
 
   if (isLoading) return <div>Cargando productos...</div>
   if (products.length === 0) return <div>No se encontraron productos.</div>
-  if (products.length > 0) console.log("Se encontraron productos.", products)
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
@@ -43,16 +40,18 @@ export default function ProductsList() {
             className="size-48 object-cover"
           />
           <CardHeader>
-            <CardTitle>{product.name || product.title}</CardTitle>
+            <CardTitle>{product.name}</CardTitle>
             <CardDescription>${product.price}</CardDescription>
-            <CardDescription>
-              Bs {(Number(product.price) * Number(data)).toFixed(2)}
-            </CardDescription>
-            <CardDescription>Cantidad: {product.quantity} und</CardDescription>
+            {dolarRate != null && (
+              <CardDescription>
+                Bs {formatPriceInBs(product.price, dolarRate)}
+              </CardDescription>
+            )}
+            <CardDescription>Stock: {product.stock} und</CardDescription>
           </CardHeader>
           <CardContent>
             <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
-              {product.category}
+              {product.category_name}
             </span>
           </CardContent>
         </Card>

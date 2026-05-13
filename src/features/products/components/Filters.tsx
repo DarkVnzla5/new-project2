@@ -1,8 +1,8 @@
 import { useForm } from "@tanstack/react-form"
 import { Search, RotateCcw } from "lucide-react"
 
-import { useProductFilterStore } from "@/features/products/store"
-import { filterSchema, type FilterValues } from "@/features/products/utils"
+import { useProductFilterStore } from "../store"
+import { filterSchema, type FilterValues } from "../utils"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import {

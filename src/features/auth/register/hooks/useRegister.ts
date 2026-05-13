@@ -1,28 +1,37 @@
 import { useMutation } from "@tanstack/react-query"
 import { useAuthStore } from "@/features/auth/store/useAuthStore"
 import api from "@/services/Api"
-import type { LoginInput } from "../../schemas/auth.schema"
+import type { RegisterSchema } from "../../schemas/auth.schema"
+import { toast } from "sonner"
+import { isAxiosError } from "axios"
 
-export const useAuthMutations = () => {
+export const useRegister = () => {
   const setAuth = useAuthStore((state) => state.setAuth)
 
-  const registerMutation = useMutation({
-    mutationFn: async ({ username, password }: LoginInput) => {
-      const { data } = await api.post("users/register/", { username, password })
+  return useMutation({
+    mutationFn: async (credentials: RegisterSchema) => {
+      const { data } = await api.post("users/register/", credentials)
       return data
     },
     onSuccess: (data) => {
-      console.log(data)
       setAuth(data)
+      toast.success("Registro exitoso", {
+        description: "Bienvenido a la plataforma",
+      })
     },
     onError: (error) => {
-      console.log(error)
+      let message = "Error al registrarse. Intente de nuevo."
+
+      if (isAxiosError(error)) {
+        const data = error.response?.data
+        if (typeof data?.detail === "string") {
+          message = data.detail
+        } else if (Array.isArray(data?.username)) {
+          message = data.username[0]
+        }
+      }
+
+      toast.error(message)
     },
   })
-
-  return {
-    register: registerMutation.mutateAsync,
-    isLoading: registerMutation.isPending,
-    error: registerMutation.error,
-  }
 }

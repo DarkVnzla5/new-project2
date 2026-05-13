@@ -1,31 +1,44 @@
-export type ProductImage = string | { image: string }
+// ── Product types ─────────────────────────────────────────────────────────────
+// These MUST match the Django ProductSerializer output exactly.
+// Django fields: id, name, brand, description, price, category, category_name,
+//                is_active, stock, rating, num_reviews, images, created_at, updated_at
+
+export interface ProductImage {
+  id: number
+  image: string
+  is_feature: boolean
+  created_at: string
+  updated_at: string
+}
 
 export interface Product {
-  id: number
-  name?: string
-  title?: string
-  description?: string
-  price: number | string
-  category?: string
-  thumbnail?: string
-  images?: ProductImage[]
-  created_at?: string
-  updated_at?: string
-  quantity?: number
+  id: string               // UUID from Django
+  name: string
+  brand: string
+  description: string
+  price: string            // Django DecimalField serializes as string
+  category: number         // FK id
+  category_name: string    // ReadOnlyField from serializer
+  is_active: boolean
+  stock: number
+  rating: string           // Django DecimalField serializes as string
+  num_reviews: number
+  images: ProductImage[]
+  created_at: string
+  updated_at: string
 }
 
 export interface CreateProductPayload {
   name: string
+  brand: string
+  description: string
   price: number
-  category?: string
-  description?: string
-  thumbnail?: string
-  images?: string[]
-  quantity?: number
+  category: number
+  stock?: number
 }
 
 export interface UpdateProductPayload extends Partial<CreateProductPayload> {
-  id: number
+  id: string
 }
 
 export interface ProductFilters {

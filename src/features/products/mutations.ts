@@ -1,33 +1,44 @@
-import api from "@/services/Api"
-import { useQueryClient } from "@tanstack/react-query"
-import { useMutation } from "@tanstack/react-query"
-import type { Product } from "./types"
+import { useQueryClient, useMutation } from "@tanstack/react-query"
+import { ProductService } from "./services"
+import type { CreateProductPayload, UpdateProductPayload } from "./types"
 
-export function createProduct() {
+// ── Product Query Keys ────────────────────────────────────────────────────────
+// Centralized so invalidation is consistent across the app.
+export const productKeys = {
+  all: ["products"] as const,
+  detail: (id: string) => ["products", id] as const,
+}
+
+// ── Mutations ─────────────────────────────────────────────────────────────────
+// Each hook follows the `use` prefix convention (React rules of hooks).
+// They call ProductService methods — never api.post/put/delete directly.
+
+export function useCreateProduct() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (product: Product) => api.post("/products/", product),
+    mutationFn: (payload: CreateProductPayload) => ProductService.create(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
+      queryClient.invalidateQueries({ queryKey: productKeys.all })
     },
   })
 }
-export function updateProduct() {
+
+export function useUpdateProduct() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (product: Product) =>
-      api.put(`/products/${product.id}/`, product),
+    mutationFn: (payload: UpdateProductPayload) => ProductService.update(payload),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
+      queryClient.invalidateQueries({ queryKey: productKeys.all })
     },
   })
 }
-export function deleteProduct() {
+
+export function useDeleteProduct() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) => api.delete(`/products/${id}/`),
+    mutationFn: (id: string) => ProductService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] })
+      queryClient.invalidateQueries({ queryKey: productKeys.all })
     },
   })
 }
