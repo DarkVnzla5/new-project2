@@ -28,8 +28,11 @@ export function LoginForm({
 
   const form = useForm({
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
+    },
+    validators: {
+      onChange: loginSchema,
     },
     onSubmit: async ({ value }) => {
       mutate(value)
@@ -56,15 +59,7 @@ export function LoginForm({
             <FieldGroup>
               {/* Usuario */}
               <form.Field
-                name="email"
-                validators={{
-                  onChange: ({ value }) => {
-                    const result = loginSchema.shape.email.safeParse(value)
-                    return result.success
-                      ? undefined
-                      : result.error.issues[0].message
-                  },
-                }}
+                name="username"
                 children={(field) => (
                   <Field
                     data-invalid={
@@ -72,14 +67,14 @@ export function LoginForm({
                     }
                   >
                     <FieldLabel htmlFor={field.name}>
-                      Correo electrónico
+                      Nombre de usuario
                     </FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
-                      type="email"
-                      placeholder="[EMAIL_ADDRESS]"
-                      autoComplete="email"
+                      type="text"
+                      placeholder="[username]"
+                      autoComplete="username"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
@@ -96,29 +91,13 @@ export function LoginForm({
               {/* Contraseña */}
               <form.Field
                 name="password"
-                validators={{
-                  onChange: ({ value }) => {
-                    const result = loginSchema.shape.password.safeParse(value)
-                    return result.success
-                      ? undefined
-                      : result.error.issues[0].message
-                  },
-                }}
                 children={(field) => (
                   <Field
                     data-invalid={
                       field.state.meta.errors.length > 0 ? true : undefined
                     }
                   >
-                    <div className="flex items-center justify-between">
-                      <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
-                      <a
-                        href="#"
-                        className="text-sm underline-offset-4 hover:underline text-muted-foreground"
-                      >
-                        ¿Olvidaste tu contraseña?
-                      </a>
-                    </div>
+                    <FieldLabel htmlFor={field.name}>Contraseña</FieldLabel>
                     <Input
                       id={field.name}
                       name={field.name}
@@ -128,6 +107,12 @@ export function LoginForm({
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                     />
+                    <a
+                      href="#"
+                      className="text-sm underline-offset-4 hover:underline text-muted-foreground"
+                    >
+                      ¿Olvidaste tu contraseña?
+                    </a>
                     <FieldError
                       errors={field.state.meta.errors.map((e) => ({
                         message: typeof e === "string" ? e : String(e),
@@ -138,9 +123,22 @@ export function LoginForm({
               />
 
               {/* Submit */}
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? "Iniciando sesión..." : "Iniciar sesión"}
-              </Button>
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={!canSubmit || isSubmitting || isPending}
+                  >
+                    {isPending
+                      ? "Iniciando sesión..."
+                      : isSubmitting
+                        ? "Iniciando sesión..."
+                        : "Iniciar sesión"}
+                  </Button>
+                )}
+              />
 
               <FieldDescription className="text-center">
                 ¿Aún sin cuenta?{" "}

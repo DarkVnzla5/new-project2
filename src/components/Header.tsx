@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { useForm } from "@tanstack/react-form"
 import { Link } from "@tanstack/react-router"
-import { useDolar } from "@/lib/utils"
+import { useDolar } from "@/hooks/useDolar"
 
 export function Header() {
   const { data } = useDolar()

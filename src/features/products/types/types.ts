@@ -1,7 +1,8 @@
 // ── Product types ─────────────────────────────────────────────────────────────
 // These MUST match the Django ProductSerializer output exactly.
 // Django fields: id, name, brand, description, price, category, category_name,
-//                is_active, stock, rating, num_reviews, images, created_at, updated_at
+//                is_active, stock, rating, num_reviews, images, updated_by_name,
+//                created_at, updated_at
 
 export interface ProductImage {
   id: number
@@ -12,18 +13,19 @@ export interface ProductImage {
 }
 
 export interface Product {
-  id: string               // UUID from Django
+  id: string // UUID from Django
   name: string
   brand: string
   description: string
-  price: string            // Django DecimalField serializes as string
-  category: number         // FK id
-  category_name: string    // ReadOnlyField from serializer
+  price: string // Django DecimalField serializes as string
+  category: number // FK id
+  category_name: string // ReadOnlyField from serializer
   is_active: boolean
   stock: number
-  rating: string           // Django DecimalField serializes as string
+  rating: string // Django DecimalField serializes as string
   num_reviews: number
   images: ProductImage[]
+  updated_by_name: string | null // Username of who last modified (null if never edited)
   created_at: string
   updated_at: string
 }

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
-import { ProductService } from "../services"
-import { productKeys } from "../mutations"
+import { ProductService } from "../types/services"
+import { productKeys } from "../hooks/mutations"
 import { useProductFilterStore } from "../store"
-import { applyFilters, getProductImage, formatPriceInBs } from "../utils"
-import type { Product } from "../types"
-import { useDolar } from "@/lib/utils"
+import { applyFilters, getProductImage, formatPriceInBs } from "../types/utils"
+import type { Product } from "../types/types"
+import { useDolar } from "@/hooks/useDolar"
 import {
   Card,
   CardContent,

@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation } from "@tanstack/react-query"
-import { ProductService } from "./services"
-import type { CreateProductPayload, UpdateProductPayload } from "./types"
+import { ProductService } from "../types/services"
+import type { CreateProductPayload, UpdateProductPayload } from "../types/types"
 
 // ── Product Query Keys ────────────────────────────────────────────────────────
 // Centralized so invalidation is consistent across the app.
