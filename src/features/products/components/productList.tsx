@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { ProductService } from "../types/services"
 import { productKeys } from "../hooks/mutations"
-import { useProductFilterStore } from "../store"
+import { useProductFilterStore } from "../stores/store"
 import { applyFilters, getProductImage, formatPriceInBs } from "../types/utils"
 import type { Product } from "../types/types"
 import { useDolar } from "@/hooks/useDolar"

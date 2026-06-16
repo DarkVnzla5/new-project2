@@ -16,7 +16,7 @@ export type FilterValues = z.infer<typeof filterSchema>
 // Returns the feature image URL, or the first image, or undefined if no images.
 
 export const getProductImage = (product: Product): string | undefined => {
-  if (!product.images || product.images.length === 0) return undefined
+  if (product.images.length === 0) return undefined
   const featured = product.images.find((img) => img.is_feature)
   return featured ? featured.image : product.images[0].image
 }

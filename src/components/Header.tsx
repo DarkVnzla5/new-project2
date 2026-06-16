@@ -1,9 +1,19 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { useForm } from "@tanstack/react-form"
 import { Link } from "@tanstack/react-router"
 import { useDolar } from "@/hooks/useDolar"
+import { useAuthStore } from "@/features/auth/store/useAuthStore"
 
 export function Header() {
   const { data } = useDolar()
@@ -15,6 +25,8 @@ export function Header() {
       console.log("searched: ", value.search)
     },
   })
+  const user = useAuthStore((state) => state.user)
+  const isLoggedIn = !!user
 
   const BussinessName = "Comercial Vuelvan Caras, C.A"
 
@@ -49,20 +61,40 @@ export function Header() {
           />
         </form>
       </div>
-
+      <div>
+        <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                Operaciones
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem>
+                <Link to="/inOut">Administracion de Inventario</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                {/* <Link to="/profile">Profile</Link> */}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
       {/* Acciones — lado derecho */}
       <div className="flex shrink-0 items-center gap-2">
         <div className="flex items-center gap-1">
-          {data != null && (
-            <Badge variant="secondary">${data.toFixed(2)}</Badge>
-          )}
-          <Badge variant="outline">
-            {new Date().toLocaleDateString()}
-          </Badge>
+          {data != null && <Badge>${data.toFixed(2)}</Badge>}
+          <Badge variant="outline">{new Date().toLocaleDateString()}</Badge>
         </div>
-        <Link to="/login">
-          <Button size="sm">Login</Button>
-        </Link>
+        {isLoggedIn ? (
+          <Button size="sm" variant="outline">
+            <Link to="/login">Logout</Link>
+          </Button>
+        ) : (
+          <Link to="/login">
+            <Button size="sm">Login</Button>
+          </Link>
+        )}
       </div>
     </nav>
   )
