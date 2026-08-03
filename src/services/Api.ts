@@ -1,8 +1,6 @@
-import axios, {
-  AxiosError,
-  type AxiosInstance,
-  type InternalAxiosRequestConfig,
-} from "axios"
+import axios from "axios"
+import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from "axios"
+
 import { useAuthStore } from "@/features/auth/store/useAuthStore"
 
 export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000"
@@ -22,11 +20,6 @@ const api: AxiosInstance = axios.create({
  * actualiza el estado de Zustand y redirige.
  */
 export const handleLogout = () => {
-  localStorage.removeItem("authtoken")
-  localStorage.removeItem("refreshtoken")
-  localStorage.removeItem("user")
-
-  // Actualizamos el store de Zustand para que la UI reaccione
   useAuthStore.getState().logout()
 
   if (typeof window !== "undefined") {
@@ -37,8 +30,8 @@ export const handleLogout = () => {
 // --- Interceptor de Petición ---
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("authtoken")
-    if (token && config.headers) {
+    const token = useAuthStore.getState().token
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
@@ -79,9 +72,7 @@ api.interceptors.response.use(
           failedQueue.push({ resolve, reject })
         })
           .then((token) => {
-            if (originalRequest.headers) {
-              originalRequest.headers.Authorization = `Bearer ${token}`
-            }
+            originalRequest.headers.Authorization = `Bearer ${token}`
             return api(originalRequest)
           })
           .catch((err) => Promise.reject(err))
@@ -105,16 +96,13 @@ api.interceptors.response.use(
             refresh: refreshToken,
           },
         )
-
         const newAccessToken = data.access
-        localStorage.setItem("authtoken", newAccessToken)
-
-        if (originalRequest.headers) {
+        const currentUser = useAuthStore.getState().user
+        useAuthStore.getState().setAuth(currentUser, newAccessToken, refreshToken)
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-        }
-
         processQueue(null, newAccessToken)
         return api(originalRequest)
+
       } catch (refreshError) {
         processQueue(refreshError, null)
         console.error("Error al refrescar el token:", refreshError)

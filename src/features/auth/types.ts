@@ -36,6 +36,8 @@ export interface AuthResponse {
 
 export interface AuthState {
   user: User | null
-  setAuth: (user: User | null) => void
+  token: string | null
+  refreshToken: string | null
+  setAuth: (user: User | null, token: string | null, refreshToken: string | null) => void
   logout: () => void
 }

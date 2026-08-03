@@ -4,14 +4,16 @@ import Filters from "@/features/products/components/Filters"
 
 export default function IndexLayout() {
   return (
-    <SidebarProvider>
+    <div>
       <Filters />
-      <div>
-        <SidebarTrigger />
-      </div>
-      <div>
-        <ProductsList />
-      </div>
-    </SidebarProvider>
+      <SidebarProvider>
+        <div>
+          <SidebarTrigger />
+        </div>
+        <div>
+          <ProductsList />
+        </div>
+      </SidebarProvider>
+    </div>
   )
 }
