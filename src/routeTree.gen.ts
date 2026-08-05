@@ -10,23 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StockInOutRouteImport } from './routes/_stock/InOut'
-import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthLandingRouteImport } from './routes/_auth/landing'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StockInOutRoute = StockInOutRouteImport.update({
-  id: '/_stock/InOut',
-  path: '/InOut',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/_auth/register',
-  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
@@ -34,39 +23,40 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthLandingRoute = AuthLandingRouteImport.update({
+  id: '/_auth/landing',
+  path: '/landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/landing': typeof AuthLandingRoute
   '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/InOut': typeof StockInOutRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/landing': typeof AuthLandingRoute
   '/login': typeof AuthLoginRoute
-  '/register': typeof AuthRegisterRoute
-  '/InOut': typeof StockInOutRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_auth/landing': typeof AuthLandingRoute
   '/_auth/login': typeof AuthLoginRoute
-  '/_auth/register': typeof AuthRegisterRoute
-  '/_stock/InOut': typeof StockInOutRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/InOut'
+  fullPaths: '/' | '/landing' | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/InOut'
-  id: '__root__' | '/' | '/_auth/login' | '/_auth/register' | '/_stock/InOut'
+  to: '/' | '/landing' | '/login'
+  id: '__root__' | '/' | '/_auth/landing' | '/_auth/login'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthLandingRoute: typeof AuthLandingRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRoute
-  StockInOutRoute: typeof StockInOutRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,20 +68,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_stock/InOut': {
-      id: '/_stock/InOut'
-      path: '/InOut'
-      fullPath: '/InOut'
-      preLoaderRoute: typeof StockInOutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/register': {
-      id: '/_auth/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof AuthRegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
@@ -99,14 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/landing': {
+      id: '/_auth/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof AuthLandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthLandingRoute: AuthLandingRoute,
   AuthLoginRoute: AuthLoginRoute,
-  AuthRegisterRoute: AuthRegisterRoute,
-  StockInOutRoute: StockInOutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

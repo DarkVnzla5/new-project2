@@ -44,7 +44,7 @@ export const useLogin = () => {
     },
     onSuccess: (data) => {
       // Guardamos el estado global en Zustand
-      setAuth(data)
+      setAuth(data, data.access, data.refresh)
 
       // Redirección segura mediante TanStack Router
       navigate({ to: "/" })

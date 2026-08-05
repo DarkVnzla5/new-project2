@@ -7,7 +7,6 @@ import { useProductFilterStore } from "../stores/store"
 import type { Product } from "../types/types"
 import type { FilterValues } from "../types/utils"
 import { filterSchema } from "../types/utils"
-
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -51,9 +50,9 @@ export default function Filters() {
   }
 
   return (
-    <section className="m-0 p-2 flex gap-4 items-center bg-cyan-500">
+    <section className="p-2 flex gap-4 items-center bg-cyan-500">
       <Button
-        variant="ghost"
+        variant="secondary"
         size="icon"
         type="button"
         onClick={() => {
@@ -72,7 +71,7 @@ export default function Filters() {
         }}
         className="flex gap-2 items-center"
       >
-        <FieldGroup className="flex  items-center">
+        <FieldGroup className="flex items-center">
           <form.Field
             name="category"
             children={(field) => {
@@ -81,7 +80,7 @@ export default function Filters() {
                   <FieldLabel>Categoria</FieldLabel>
                   <FieldContent>
                     <Select
-                      value={field.state.value || "Todo"}
+                      value={field.state.value ? field.state.value : "Todo"}
                       onValueChange={(value) =>
                         handleImmediateChange(
                           "category",

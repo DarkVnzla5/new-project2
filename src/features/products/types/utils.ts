@@ -36,8 +36,10 @@ export const applyFilters = (
       !filters.category ||
       filters.category === "Todo" ||
       p.category_name === filters.category
-    const matchMin = filters.minPrice == null || price >= filters.minPrice
-    const matchMax = filters.maxPrice == null || price <= filters.maxPrice
+    const hasMin= filters.minPrice != null && filters.minPrice > 0
+    const hasMax= filters.maxPrice != null && filters.maxPrice > 0
+    const matchMin = !hasMin || price >= (filters.minPrice as number)
+    const matchMax = !hasMax || price <=(filters.maxPrice as number)
     return matchSearch && matchCategory && matchMin && matchMax
   })
 }

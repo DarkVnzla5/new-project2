@@ -10,8 +10,8 @@ interface ProductFilterStore {
 const initialFilters: FilterValues = {
   search: "",
   category: "",
-  minPrice: 0,
-  maxPrice: 0,
+  minPrice: undefined,
+  maxPrice: undefined,
 }
 
 export const useProductFilterStore = create<ProductFilterStore>((set) => ({

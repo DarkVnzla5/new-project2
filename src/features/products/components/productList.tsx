@@ -23,10 +23,11 @@ export default function ProductsList() {
     queryKey: productKeys.all,
     queryFn: ProductService.getAll,
   })
-
+  console.log("Productos que llegaron del API:", products)
+  console.log("Filtros activos en Zustand:", filters)
   // 3. Apply the filters from utils.ts
   const filteredProducts = applyFilters(products, filters)
-
+  console.log("Productos después del filtro:", filteredProducts)
   if (isLoading) return <div>Cargando productos...</div>
   if (products.length === 0) return <div>No se encontraron productos.</div>
 
