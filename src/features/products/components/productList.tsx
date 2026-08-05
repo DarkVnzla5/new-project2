@@ -1,0 +1,68 @@
+import { useQuery } from "@tanstack/react-query"
+import { ProductService } from "../types/services"
+import { productKeys } from "../hooks/mutations"
+import { useProductFilterStore } from "../stores/store"
+import { applyFilters, getProductImage, formatPriceInBs } from "../types/utils"
+import type { Product } from "../types/types"
+import { useDolar } from "@/hooks/useDolar"
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card"
+
+export default function ProductsList() {
+  // 1. Get current filters from Zustand
+  const filters = useProductFilterStore((state) => state.filters)
+  const { data: dolarRate } = useDolar()
+
+  // 2. Fetch products through the service layer (not api.get directly)
+  const { data: products = [], isLoading } = useQuery<Product[]>({
+    queryKey: productKeys.all,
+    queryFn: ProductService.getAll,
+  })
+  console.log("Productos que llegaron del API:", products)
+  console.log("Filtros activos en Zustand:", filters)
+  // 3. Apply the filters from utils.ts
+  const filteredProducts = applyFilters(products, filters)
+  console.log("Productos después del filtro:", filteredProducts)
+  if (isLoading) return <div>Cargando productos...</div>
+  if (products.length === 0) return <div>No se encontraron productos.</div>
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+      {filteredProducts.map((product) => (
+        <Card key={product.id} className="border p-4 rounded-lg shadow-sm">
+          <img
+            src={getProductImage(product)}
+            alt={product.name}
+            className="size-48 object-cover"
+          />
+          <CardHeader>
+            <CardTitle>{product.name}</CardTitle>
+            <CardDescription>${product.price}</CardDescription>
+            {dolarRate != null && (
+              <CardDescription>
+                Bs {formatPriceInBs(product.price, dolarRate)}
+              </CardDescription>
+            )}
+            <CardDescription>Stock: {product.stock} und</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+              {product.category_name}
+            </span>
+          </CardContent>
+        </Card>
+      ))}
+
+      {filteredProducts.length === 0 && (
+        <div className="col-span-full text-center py-20 text-muted-foreground">
+          No se encontraron productos con estos filtros.
+        </div>
+      )}
+    </div>
+  )
+}

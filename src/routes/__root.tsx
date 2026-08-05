@@ -1,7 +1,9 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router"
+
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
-import RootLayout from "../layouts/root-layout"
+import { Toaster } from "sonner"
+
 import "../styles.css"
 
 export const Route = createRootRoute({
@@ -11,20 +13,22 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <RootLayout>
-        <Outlet />
-      </RootLayout>
-      <TanStackDevtools
-        config={{
-          position: "bottom-right",
-        }}
-        plugins={[
-          {
-            name: "TanStack Router",
-            render: <TanStackRouterDevtoolsPanel />,
-          },
-        ]}
-      />
+      <Outlet />
+      <Toaster richColors position="top-right" />
+      {/* Envolvemos las herramientas en un div contenedor limpio por seguridad */}
+      <div className="contents">
+        <TanStackDevtools
+          config={{
+            position: "bottom-right",
+          }}
+          plugins={[
+            {
+              name: "TanStack Router",
+              render: () => <TanStackRouterDevtoolsPanel />,
+            },
+          ]}
+        />
+      </div>
     </>
   )
 }

@@ -15,6 +15,9 @@ const config = defineConfig({
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     viteReact(),
   ],
+  optimizeDeps: {
+    include: ["use-sync-external-store/shim", "use-sync-external-store/shim/with-selector"],
+  },
 })
 
 export default config
